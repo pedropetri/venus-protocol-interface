@@ -129,9 +129,9 @@ export { default as getBalanceOf } from './queries/getBalanceOf';
 export * from './queries/getBalanceOf';
 export { default as useGetBalanceOf } from './queries/getBalanceOf';
 
-export { default as getVrtConversionEndtime } from './queries/getVrtConversionEndTime';
+export { default as getVrtConversionEndTime } from './queries/getVrtConversionEndTime';
 export * from './queries/getVrtConversionEndTime';
-export { default as useGetVrtConversionEndtime } from './queries/useGetVrtConversionEndTime';
+export { default as useGetVrtConversionEndTime } from './queries/useGetVrtConversionEndTime';
 
 export { default as getVrtConversionRatio } from './queries/getVrtConversionRatio';
 export * from './queries/getVrtConversionRatio';
