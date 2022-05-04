@@ -1,5 +1,5 @@
 /** @jsxImportSource @emotion/react */
-import React from 'react';
+import React, { useMemo } from 'react';
 import BigNumber from 'bignumber.js';
 import noop from 'noop-ts';
 import { Typography } from '@mui/material';
@@ -12,7 +12,7 @@ import {
   TokenTextField,
 } from 'components';
 import { useTranslation } from 'translation';
-import useConvertToReadableCoinString from 'utilities/useConvertToReadableCoinString';
+import useConvertToReadableCoinString from 'hooks/useConvertToReadableCoinString';
 import { format } from 'utilities/common';
 import { AmountForm, ErrorCode } from 'containers/AmountForm';
 import PLACEHOLDER_KEY from 'constants/placeholderKey';
