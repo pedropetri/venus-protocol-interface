@@ -1,5 +1,5 @@
 /** @jsxImportSource @emotion/react */
-import React, { useMemo } from 'react';
+import React from 'react';
 import BigNumber from 'bignumber.js';
 import { Typography } from '@mui/material';
 import { PrimaryButton } from 'components';
@@ -9,20 +9,16 @@ import { XVS_ID } from '../constants';
 import { useStyles } from '../styles';
 
 interface WithdrawProps {
-  xvsTotal: BigNumber;
+  xvsVestedBalanceWei: BigNumber;
 }
 
-const Withdraw: React.FC<WithdrawProps> = ({ xvsTotal }) => {
+const Withdraw: React.FC<WithdrawProps> = ({ xvsVestedBalanceWei }) => {
   const { t } = useTranslation();
   const styles = useStyles();
-  const readableXvsAvailable = useMemo(
-    () =>
-      useConvertToReadableCoinString({
-        valueWei: xvsTotal,
-        tokenId: XVS_ID,
-      }),
-    [xvsTotal],
-  );
+  const readableXvsAvailable = useConvertToReadableCoinString({
+    valueWei: xvsVestedBalanceWei,
+    tokenId: XVS_ID,
+  });
   return (
     <div css={styles.root}>
       <section css={styles.title}>
