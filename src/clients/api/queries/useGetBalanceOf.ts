@@ -17,7 +17,7 @@ type Options = QueryObserverOptions<
 >;
 
 const useGetBalanceOfIndex = (
-  { accountAddress, tokenId }: Omit<IGetBalanceOfInput, 'vrtTokenContract'> & { tokenId: TokenId },
+  { accountAddress, tokenId }: Omit<IGetBalanceOfInput, 'tokenContract'> & { tokenId: TokenId },
   options?: Options,
 ) => {
   const tokenContract = useTokenContract(tokenId);

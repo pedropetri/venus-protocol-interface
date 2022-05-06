@@ -88,6 +88,7 @@
     "dailyLimit": "Daily limit",
     "days_one": "{{count}} day",
     "days_other": "{{count}} day",
+    "enableVrt": "To convert VRT to XVS you will first need to enable it.",
     "hours_one": "{{count}} hour",
     "hours_other": "{{count}} hours",
     "max": "Max",
@@ -103,12 +104,17 @@
     "remainingTimeMinutes_other": "<Icon/> Remaining time:\u00a0<White>{{count}} minutes</White>",
     "remainingTimeMissing": "<Icon/> Remaining time:\u00a0<White>{{count}}</White>",
     "usedOverTotalVrt": "{{used}}/{{total}} VRT",
-    "vrtEqualsXvs": "1 VRT = {{xvsToVrtRate}} XVS",
+    "vrtEqualsXvs": "1 VRT = {{xvsToVrtConversionRatio}} XVS",
     "withdraw": "Withdraw",
     "withdrawableAmount": "Withdrawable amount",
     "withdrawXvs": "Withdraw XVS",
     "xvsAVailable": "Current XVS Available",
-    "youWillReceive": "You will receive"
+    "youWillReceive": "You will receive",
+    "successfulConvertTransactionModal": {
+      "title": "Convert submitted successfully",
+      "message": "You successfully converted VRT to XVS"
+    }
+  
   },
   "dashboard": {
     "markets": {
