@@ -12,7 +12,7 @@ import { AuthContext } from 'context/AuthContext';
 import useSuccessfulTransactionModal from 'hooks/useSuccessfulTransactionModal';
 import renderComponent from 'testUtils/renderComponent';
 import en from 'translation/translations/en.json';
-import Repay from '.';
+import Repay, { PRESET_PERCENTAGES } from '.';
 
 const fakeAsset: Asset = {
   ...assetData[0],
@@ -154,7 +154,7 @@ describe('pages/Dashboard/BorrowRepayModal/Repay', () => {
     ).toHaveAttribute('disabled');
   });
 
-  it('updates input value to token wallet balance when it is lower than token borrow balance', async () => {
+  it('updates input value to token wallet balance when pressing on max button if token wallet balance is lower than token borrow balance', async () => {
     const customFakeAsset: Asset = {
       ...fakeAsset,
       borrowBalance: new BigNumber(100),
@@ -195,7 +195,7 @@ describe('pages/Dashboard/BorrowRepayModal/Repay', () => {
     );
   });
 
-  it('updates input value to token borrow balance when it is lower than token wallet balance', async () => {
+  it('updates input value to token borrow balance when pressing on max button if token borrow balance is lower than token wallet balance', async () => {
     const customFakeAsset: Asset = {
       ...fakeAsset,
       borrowBalance: new BigNumber(10),
@@ -236,7 +236,13 @@ describe('pages/Dashboard/BorrowRepayModal/Repay', () => {
     );
   });
 
-  it('disables submit button if an incorrect amount is entered in input', async () => {
+  it('updates input value to correct value when pressing on preset percentage buttons', async () => {
+    const customFakeAsset: Asset = {
+      ...fakeAsset,
+      borrowBalance: new BigNumber(100),
+      walletBalance: new BigNumber(100),
+    };
+
     const { getByText, getByTestId } = renderComponent(
       <AuthContext.Provider
         value={{
@@ -249,33 +255,34 @@ describe('pages/Dashboard/BorrowRepayModal/Repay', () => {
           },
         }}
       >
-        <Repay asset={fakeAsset} onClose={noop} isXvsEnabled />
+        <Repay asset={customFakeAsset} onClose={noop} isXvsEnabled />
       </AuthContext.Provider>,
     );
     await waitFor(() => getByText(en.borrowRepayModal.repay.submitButtonDisabled));
 
-    expect(
-      getByText(en.borrowRepayModal.repay.submitButtonDisabled).closest('button'),
-    ).toHaveAttribute('disabled');
+    // Check input is empty
+    const input = getByTestId('token-text-field') as HTMLInputElement;
+    expect(input.value).toBe('');
 
-    // Enter amount in input
-    fireEvent.change(getByTestId('token-text-field'), {
-      target: { value: fakeAsset.borrowBalance.toFixed() },
-    });
+    for (let i = 0; i < PRESET_PERCENTAGES.length; i++) {
+      const presetPercentage = PRESET_PERCENTAGES[i];
 
-    await waitFor(() => getByText(en.borrowRepayModal.repay.submitButton));
-    expect(getByText(en.borrowRepayModal.repay.submitButton).closest('button')).not.toHaveAttribute(
-      'disabled',
-    );
+      // Press on preset percentage button
+      fireEvent.click(getByText(`${presetPercentage}%`));
 
-    // Enter amount higher than maximum borrow limit in input
-    fireEvent.change(getByTestId('token-text-field'), {
-      target: { value: fakeAsset.borrowBalance.plus(1).toFixed() },
-    });
-    await waitFor(() => getByText(en.borrowRepayModal.repay.submitButtonDisabled));
-    expect(
-      getByText(en.borrowRepayModal.repay.submitButtonDisabled).closest('button'),
-    ).toHaveAttribute('disabled');
+      const expectedInputValue = customFakeAsset.borrowBalance
+        .multipliedBy(presetPercentage / 100)
+        .dp(customFakeAsset.decimals)
+        .toFixed();
+
+      // eslint-disable-next-line
+      await waitFor(() => expect(input.value).toBe(expectedInputValue));
+
+      // Check submit button is enabled
+      expect(
+        getByText(en.borrowRepayModal.repay.submitButton).closest('button'),
+      ).not.toHaveAttribute('disabled');
+    }
   });
 
   it('lets user repay borrowed tokens, then displays successful transaction modal and calls onClose callback on success', async () => {
@@ -305,16 +312,18 @@ describe('pages/Dashboard/BorrowRepayModal/Repay', () => {
       getByText(en.borrowRepayModal.repay.submitButtonDisabled).closest('button'),
     ).toHaveAttribute('disabled');
 
+    const correctAmountTokens = 1;
+
     // Enter amount in input
     fireEvent.change(getByTestId('token-text-field'), {
-      target: { value: fakeAsset.borrowBalance.toFixed() },
+      target: { value: correctAmountTokens },
     });
 
     // Click on submit button
     await waitFor(() => getByText(en.borrowRepayModal.repay.submitButton));
     fireEvent.click(getByText(en.borrowRepayModal.repay.submitButton));
 
-    const expectedAmountWei = fakeAsset.borrowBalance.multipliedBy(
+    const expectedAmountWei = new BigNumber(correctAmountTokens).multipliedBy(
       new BigNumber(10).pow(fakeAsset.decimals),
     );
 
