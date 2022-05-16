@@ -36,9 +36,9 @@ https://youtu.be/U4N5bp9Q-go
 venus-protocol-interface
 ```
 
-**Link**
+**PR Link**
 ```
-https://pedropetri@github.com/pedropetri/venus-protocol-interface
+https://github.com/VenusProtocol/venus-protocol-interface/pull/484
 ```
 
 
